@@ -1,0 +1,14 @@
+# Environnement et Secrets locales
+.env
+.env.local
+*.env
+
+# Système d'exploitation
+.DS_Store
+Thumbs.db
+
+# Dossiers de builds/dépendances courants (au cas où)
+node_modules/
+dist/
+build/
+*.log
