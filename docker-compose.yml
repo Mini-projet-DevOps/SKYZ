@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  # 🗄️ Service Base de données PostgreSQL
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: skyz_postgres_container
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-skyz_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-skyz_secure_pass2026}
+      POSTGRES_DB: ${POSTGRES_DB:-skyz_exam_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  # Volume persistant pour ne pas perdre les notes et élèves au redémarrage
+  postgres_data:

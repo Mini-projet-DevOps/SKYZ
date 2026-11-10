@@ -1,14 +1,20 @@
-# Environnement et Secrets locales
+# Coeur DevOps : Bloquer les secrets (Exigence majeure du sujet)
 .env
 .env.local
-*.env
+.env.*.local
 
-# Système d'exploitation
-.DS_Store
-Thumbs.db
-
-# Dossiers de builds/dépendances courants (au cas où)
+# Dépendances (Seront installées proprement dans Docker)
 node_modules/
 dist/
-build/
-*.log
+.next/
+out/
+
+# Fichiers systèmes et éditeurs
+.DS_Store
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
