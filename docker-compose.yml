@@ -1,20 +1,51 @@
-version: '3.8'
-
 services:
-  # 🗄️ Service Base de données PostgreSQL
+  # 🗄️ Base de données PostgreSQL
   postgres_db:
     image: postgres:16-alpine
     container_name: skyz_postgres_container
     restart: always
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-skyz_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-skyz_secure_pass2026}
-      POSTGRES_DB: ${POSTGRES_DB:-skyz_exam_db}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ⚙️ Backend NestJS
+  backend:
+    build:
+      context: ./backend
+    container_name: skyz_backend_container
+    restart: always
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    environment:
+      PORT: ${BACKEND_PORT}
+      # Dans Docker, l'hôte est le nom du service (postgres_db), pas localhost
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db:5432/${POSTGRES_DB}?schema=public
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+
+  # 🎨 Frontend React (servi par Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    container_name: skyz_frontend_container
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT}:80"
 
 volumes:
-  # Volume persistant pour ne pas perdre les notes et élèves au redémarrage
   postgres_data:
