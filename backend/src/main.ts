@@ -25,4 +25,4 @@ async function bootstrap() {
 
   Logger.log(`🚀 Serveur démarré sur http://localhost:${port}`, 'Bootstrap');
 }
-bootstrap();
+void bootstrap();
