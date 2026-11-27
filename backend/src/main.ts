@@ -9,7 +9,7 @@ async function bootstrap() {
   app.use(helmet());
 
   app.enableCors({
-    origin: ['http://localhost:5173'], // ton front React + Vite
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // ton front React + Vite
     credentials: true,
   });
 
