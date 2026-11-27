@@ -2,6 +2,8 @@
 .env
 .env.local
 .env.*.local
+backend/.env
+frontend/.env
 
 # Dépendances (Seront installées proprement dans Docker)
 node_modules/
